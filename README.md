@@ -1,0 +1,2 @@
+- Refresher of Linear algebra to draw vectors using operations add, subtract, multiply, angle between, and area
+- Overview of WebGSL
