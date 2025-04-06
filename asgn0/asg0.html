@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+   <html lang="en">
+     <head>
+       <meta charset="utf-8" />
+       <title>Draw a blue rectangle (canvas version)</title>
+     </head>
+ 
+     <body onload="main()">
+      <h1>Jasmine Fortez's First Vector Computer Graphic</h1>
+      <canvas id="example" width="400" height="400">
+     Please use a browser that supports "canvas"
+    
+     </canvas>
+
+     <script src="asg0.js"></script>
+     <script src="lib/cuon-matrix.js"></script>
+    
+    
+     <div>
+      <label for="v1">v1: </label>
+      <label for="1x">x</label>
+      <input type="text" id="v1X" name="v1X"  size="10" />
+      <label for="1y">y</label>
+      <input type="text" id="v1Y" name="v1Y"  size="10" />
+    </div>
+    
+    <div>
+      <label for="v2">v2: </label>
+      <label for="2x">x</label>
+      <input type="text" id="v2X" name="v2X"  size="10" />
+      <label for="2y">y</label>
+      <input type="text" id="v2Y" name="v2Y"  size="10" />
+      
+    </div>
+   
+    <input type="button" value="Draw" onclick="handleDrawEvent()"> </input>
+    <br><br>
+    <label for="operations-select">Operation:</label>
+    <select name="operation" id="operations-select">
+      <option value="">--Please choose an option--</option>
+      <option value="add">Add</option>
+      <option value="sub">Subtract</option>
+      <option value="mul">Multiply</option>
+      <option value="div">Divide</option>
+      <option value="angle">Angle Between</option>
+      <option value="area">Area</option>
+      <option value="mag">Magnitude</option>
+      <option value="norm">Normalize</option>
+
+    </select>
+
+    <label for="scalar">Scalar:</label>
+    <input type="text" id="scalar" name="scalar" size="10" value="1" />
+
+    <br><br>
+    <input type="button" value="Draw Operation" onclick="handleDrawOperationEvent()" />
+
+    </body>
+  </html>
