@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Color Fill Challenge - Awesomeness</title>
+  <style>
+    /* General body styling */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f0f0f0, #e0e0e0);
+      margin: 0;
+      padding: 20px;
+      color: #333;
+      text-align: center;
+    }
+
+    /* Header styling */
+    header {
+      margin-bottom: 20px;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2.8em;
+      color: #FF1493; /* deep pink */
+    }
+
+    /* Container for canvases */
+    .canvas-container {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+    }
+    canvas {
+      border: 2px solid #333;
+      background-color: #fff;
+      box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Palette styling */
+    .palette {
+      margin: 20px auto;
+    }
+    .palette button {
+      width: 35px;
+      height: 35px;
+      border: none;
+      margin: 0 8px;
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Controls styling */
+    .controls {
+      margin: 20px auto;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .controls button {
+      padding: 12px 18px;
+      border: none;
+      border-radius: 6px;
+      background-color: pink;
+      color: white;
+      cursor: pointer;
+      font-size: 1em;
+      transition: background-color 0.3s ease;
+      box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.2);
+    }
+    .controls button:hover {
+      background-color: darkmagenta;
+    }
+    .back-button {
+      background-color: #FF1493;
+    }
+    .back-button:hover {
+      background-color: #C71585;
+    }
+    #timerDisplay {
+      font-size: 1.3em;
+      margin-top: 10px;
+    }
+
+    /* Grid styling for target and user mosaics */
+    .canvas-container canvas {
+      margin-bottom: 10px;
+    }
+
+    /* About section styling */
+    .about {
+      margin-top: 30px;
+      padding: 20px;
+      background: rgba(255, 240, 245, 0.9);
+      border: 1px solid #ff99bb;
+      border-radius: 8px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+      box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
+    }
+    .about h2 {
+      margin-top: 0;
+      color: #C71585;
+    }
+  </style>
+</head>
+<body onload="initGame()">
+  <header>
+    <h1>Color Fill Challenge</h1>
+  </header>
+  
+  <!-- Two canvases: left shows target mosaic, right is user’s painting -->
+  <div class="canvas-container">
+    <div>
+      <h3>Target Mosaic</h3>
+      <canvas id="targetCanvas" width="300" height="300"></canvas>
+    </div>
+    <div>
+      <h3>Your Canvas</h3>
+      <canvas id="userCanvas" width="300" height="300"></canvas>
+    </div>
+  </div>
+  
+  <!-- Color palette -->
+  <div class="palette">
+    <button style="background-color: red;" onclick="setFillColor([255, 0, 0, 255])"></button>
+    <!-- Updated green to use [0,128,0,255] -->
+    <button style="background-color: green;" onclick="setFillColor([0, 128, 0, 255])"></button>
+    <button style="background-color: blue;" onclick="setFillColor([0, 0, 255, 255])"></button>
+    <button style="background-color: yellow;" onclick="setFillColor([255, 255, 0, 255])"></button>
+    <button style="background-color: purple;" onclick="setFillColor([128, 0, 128, 255])"></button>
+    <button style="background-color: orange;" onclick="setFillColor([255, 165, 0, 255])"></button>
+  </div>
+  
+  <!-- Challenge Controls -->
+  <div class="controls">
+    <button onclick="finishChallenge()">Done</button>
+    <button onclick="newChallenge()">Do It Again</button>
+    <button class="back-button" onclick="location.href='ColoredPoints.html'">Go Back to Main Page</button>
+  </div>
+  <p id="timerDisplay">Time: 0.0 s</p>
+  
+  <script>
+    let targetCanvas, userCanvas, targetCtx, userCtx;
+    let startTime, challengeFinished = false;
+    let currentFillColor = [255, 0, 0, 255]; // default red
+
+    // Draw grid lines (dividing canvas into 4 quadrants)
+    function drawGrid(ctx, width, height) {
+      ctx.strokeStyle = "black";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(width / 2, 0);
+      ctx.lineTo(width / 2, height);
+      ctx.moveTo(0, height / 2);
+      ctx.lineTo(width, height / 2);
+      ctx.stroke();
+    }
+
+    // Design 1: Four quadrants with grid
+    function drawTargetDesign1() {
+      targetCtx.fillStyle = "red";
+      targetCtx.fillRect(0, 0, 150, 150);
+      targetCtx.fillStyle = "green";
+      targetCtx.fillRect(150, 0, 150, 150);
+      targetCtx.fillStyle = "blue";
+      targetCtx.fillRect(0, 150, 150, 150);
+      targetCtx.fillStyle = "yellow";
+      targetCtx.fillRect(150, 150, 150, 150);
+      drawGrid(targetCtx, targetCanvas.width, targetCanvas.height);
+    }
+    
+    // Design 2: Two horizontal stripes with grid
+    function drawTargetDesign2() {
+      targetCtx.fillStyle = "purple";
+      targetCtx.fillRect(0, 0, 300, 150);
+      targetCtx.fillStyle = "orange";
+      targetCtx.fillRect(0, 150, 300, 150);
+      drawGrid(targetCtx, targetCanvas.width, targetCanvas.height);
+    }
+    
+    // Design 3: Two vertical stripes with grid
+    function drawTargetDesign3() {
+      targetCtx.fillStyle = "red";
+      targetCtx.fillRect(0, 0, 150, 300);
+      targetCtx.fillStyle = "orange";
+      targetCtx.fillRect(150, 0, 150, 300);
+      drawGrid(targetCtx, targetCanvas.width, targetCanvas.height);
+    }
+    
+    // Choose a random design from 3 options
+    function drawTargetMosaic() {
+      targetCtx.clearRect(0, 0, targetCanvas.width, targetCanvas.height);
+      const choice = Math.floor(Math.random() * 3); // 0, 1, or 2
+      if (choice === 0) drawTargetDesign1();
+      else if (choice === 1) drawTargetDesign2();
+      else drawTargetDesign3();
+    }
+    
+    // Draw grid lines on the user canvas
+    function drawUserGrid() {
+      userCtx.strokeStyle = "black";
+      userCtx.lineWidth = 2;
+      drawGrid(userCtx, userCanvas.width, userCanvas.height);
+    }
+    
+    function initGame() {
+      targetCanvas = document.getElementById('targetCanvas');
+      userCanvas = document.getElementById('userCanvas');
+      targetCtx = targetCanvas.getContext('2d');
+      userCtx = userCanvas.getContext('2d');
+      
+      drawTargetMosaic();
+      
+      // Initialize user canvas: fill white and draw grid.
+      userCtx.fillStyle = "white";
+      userCtx.fillRect(0, 0, userCanvas.width, userCanvas.height);
+      drawUserGrid();
+      
+      challengeFinished = false;
+      startTime = Date.now();
+      
+      userCanvas.addEventListener("click", function(e) {
+        if (challengeFinished) return;
+        const rect = userCanvas.getBoundingClientRect();
+        const x = Math.floor(e.clientX - rect.left);
+        const y = Math.floor(e.clientY - rect.top);
+        floodFill(userCanvas, x, y, currentFillColor);
+      });
+      
+      requestAnimationFrame(updateTimer);
+    }
+    
+    function setFillColor(colorArray) {
+      currentFillColor = colorArray;
+    }
+    
+    function updateTimer() {
+      if (!challengeFinished) {
+        const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
+        document.getElementById("timerDisplay").textContent = "Time: " + elapsed + " s";
+        requestAnimationFrame(updateTimer);
+      }
+    }
+    
+    // Compare pixel data between target and user canvases
+    function checkMatch() {
+      const targetData = targetCtx.getImageData(0, 0, targetCanvas.width, targetCanvas.height).data;
+      const userData = userCtx.getImageData(0, 0, userCanvas.width, userCanvas.height).data;
+      let matchCount = 0;
+      const totalPixels = targetCanvas.width * targetCanvas.height;
+      for (let i = 0; i < totalPixels * 4; i += 4) {
+        if (
+          targetData[i] === userData[i] &&
+          targetData[i+1] === userData[i+1] &&
+          targetData[i+2] === userData[i+2] &&
+          targetData[i+3] === userData[i+3]
+        ) {
+          matchCount++;
+        }
+      }
+      return ((matchCount / totalPixels) * 100).toFixed(1);
+    }
+    
+    function finishChallenge() {
+      challengeFinished = true;
+      const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
+      const matchPercent = checkMatch();
+      document.getElementById("timerDisplay").textContent = "Final Time: " + elapsed + " s | Match: " + matchPercent + "%";
+      alert("Challenge finished!\nYour time: " + elapsed + " seconds\nMatch: " + matchPercent + "%");
+    }
+    
+    function newChallenge() {
+      challengeFinished = false;
+      startTime = Date.now();
+      document.getElementById("timerDisplay").textContent = "Time: 0.0 s";
+      drawTargetMosaic();
+      userCtx.fillStyle = "white";
+      userCtx.fillRect(0, 0, userCanvas.width, userCanvas.height);
+      drawUserGrid();
+      requestAnimationFrame(updateTimer);
+    }
+    
+    // Flood fill algorithm using a stack-based approach
+    function floodFill(canvas, startX, startY, fillColor) {
+      const ctx = canvas.getContext("2d");
+      const width = canvas.width;
+      const height = canvas.height;
+      const imageData = ctx.getImageData(0, 0, width, height);
+      const data = imageData.data;
+    
+      function getPixelColor(x, y) {
+        const index = (y * width + x) * 4;
+        return [data[index], data[index+1], data[index+2], data[index+3]];
+      }
+    
+      function setPixelColor(x, y, color) {
+        const index = (y * width + x) * 4;
+        data[index] = color[0];
+        data[index+1] = color[1];
+        data[index+2] = color[2];
+        data[index+3] = color[3];
+      }
+    
+      function colorsMatch(a, b) {
+        return a[0] === b[0] && a[1] === b[1] &&
+               a[2] === b[2] && a[3] === b[3];
+      }
+    
+      const startCol = getPixelColor(startX, startY);
+      if (colorsMatch(startCol, fillColor)) return;
+    
+      const pixelStack = [[startX, startY]];
+    
+      while (pixelStack.length) {
+        const newPos = pixelStack.pop();
+        const x = newPos[0];
+        const y = newPos[1];
+    
+        let currentY = y;
+        while (currentY >= 0 && colorsMatch(getPixelColor(x, currentY), startCol)) {
+          currentY--;
+        }
+        currentY++;
+    
+        let reachLeft = false;
+        let reachRight = false;
+    
+        while (currentY < height && colorsMatch(getPixelColor(x, currentY), startCol)) {
+          setPixelColor(x, currentY, fillColor);
+    
+          if (x > 0) {
+            if (colorsMatch(getPixelColor(x - 1, currentY), startCol)) {
+              if (!reachLeft) {
+                pixelStack.push([x - 1, currentY]);
+                reachLeft = true;
+              }
+            } else if (reachLeft) {
+              reachLeft = false;
+            }
+          }
+          if (x < width - 1) {
+            if (colorsMatch(getPixelColor(x + 1, currentY), startCol)) {
+              if (!reachRight) {
+                pixelStack.push([x + 1, currentY]);
+                reachRight = true;
+              }
+            } else if (reachRight) {
+              reachRight = false;
+            }
+          }
+          currentY++;
+        }
+      }
+    
+      ctx.putImageData(imageData, 0, 0);
+    }
+  </script>
+  
+  <!-- About Section -->
+  <div class="about">
+    <h2>My Attempt for Awesomeness</h2>
+    <p>This is my color matching painting program! The goal is to fill your canvas to match a target mosaic using a flood fill tool.
+    I added grid outlines to both canvases to help guide your painting, and you can choose your fill colors from the palette.
+    I experimented with multiple target designs to keep the challenge fresh.
+  
+    I also experimented a lot with layouts, colors, grids, and various other elements—I’m still learning CSS, so this is what I've managed to create so far. It’s a work in progress, but I’m proud of the creative steps I'm taking!</p>
+  </div>
+</body>
+</html>

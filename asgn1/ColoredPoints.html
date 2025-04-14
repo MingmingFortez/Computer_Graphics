@@ -4,10 +4,10 @@
     <meta charset="utf-8" />
     <title>Change a point color</title>
     <style>
-      /* General body and font styles */
+      /* General body and font styles with background gradient */
       body {
         font-family: Arial, sans-serif;
-        background-color: #f8f8f8;
+        background: linear-gradient(135deg, #f8f8f8, #e0e0e0);
         margin: 20px;
         color: #333;
         text-align: center;
@@ -21,14 +21,16 @@
         margin: 0;
         font-size: 2.5em;
         color: #FF1493; /* deep pink */
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
       }
       
-      /* Canvas styling */
+      /* Canvas styling with box-shadow for a lifted effect */
       canvas {
         display: block;
         margin: 0 auto 20px;
         border: 2px solid #333;
         background-color: #fff;
+        box-shadow: 4px 4px 12px rgba(0,0,0,0.2);
       }
       
       /* Container for horizontal grouping */
@@ -94,6 +96,7 @@
         border-radius: 10px;
         padding: 8px 12px;
         margin: 0 auto 20px;
+        box-shadow: 2px 2px 8px rgba(0,0,0,0.2);
       }
       .hello-kitty-container p {
         margin: 0;
@@ -131,6 +134,7 @@
         font-size: 1.1em;
         font-weight: bold;
         margin-bottom: 10px;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
       }
       
       /* Column for shape buttons and segments */
@@ -149,6 +153,7 @@
         font-size: 1.1em;
         font-weight: bold;
         margin-bottom: 10px;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
       }
       
       /* Row container for Circle button and Segments slider */
@@ -225,6 +230,23 @@
         background: #c4c4ff;
         border-radius: 3px;
       }
+      
+      /* About section styling */
+      .about {
+        margin-top: 40px;
+        padding: 20px;
+        background: linear-gradient(135deg, #ffe6f0, #fff);
+        border: 1px solid #ff99bb;
+        border-radius: 8px;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+        box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
+      }
+      .about h2 {
+        margin-top: 0;
+        color: #C71585;
+      }
     </style>
   </head>
   <body onload="main()">
@@ -243,8 +265,6 @@
     <div class="clear-container">
       <button type="button" id="clearButton" class="default">Clear</button>
     </div>
-    
-    
     
     <!-- Color buttons row: Green and Red -->
     <div class="button-container">
@@ -288,15 +308,41 @@
     </div>
 
     <!-- Draw Hello Kitty container with image -->
-<div class="hello-kitty-container">
-  <button type="button" id="drawButton" class="default" onclick="drawMyPicture()">
-    Draw Hello Kitty
-  </button>
-  <p>a picture of Hello Kitty drawn by Jasmine will be shown</p>
-  <!-- Insert the image here -->
-  <img src="IMG_3761.jpeg" alt="Hand-drawn Hello Kitty" style="max-width: 100px; height: auto; margin-left: 10px;">
-</div>
+    <div class="hello-kitty-container">
+      <button type="button" id="drawButton" class="default" onclick="drawMyPicture()">
+        Draw Hello Kitty
+      </button>
+      <p>a picture of Hello Kitty drawn by Jasmine will be shown</p>
+      <!-- Insert the image here -->
+      <img src="IMG_3761.jpeg" alt="Hand-drawn Hello Kitty" style="max-width: 100px; height: auto; margin-left: 10px;">
+    </div>
 
+    <!-- Awesomeness / About section -->
+    <div class="about">
+      <h2>My Attempt for Awesomeness</h2>
+      <p>
+        This color matching painting program is my attempt at awesomeness. I experimented with layouts, colors, grids, gradients, and shadows to create an interactive challenge where you try to fill the canvas to match a target mosaic. I'm still learning CSS, so this is what I have come up with so far!
+      </p>
+    </div>
+    
+    <!-- Additional Awesomeness Button -->
+    <button 
+      onclick="location.href='game.html'" 
+      style="
+        background: linear-gradient(135deg, #FF1493, #C71585);
+        color: white;
+        padding: 15px 25px;
+        font-size: 1.2em;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        box-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+        transition: background 0.3s ease;
+      " 
+      onmouseover="this.style.background='linear-gradient(135deg, #C71585, #FF1493)'" 
+      onmouseout="this.style.background='linear-gradient(135deg, #FF1493, #C71585)'">
+      Click Here for Some Awesomeness
+    </button>
     
     <!-- Scripts -->
     <script src="./lib/webgl-utils.js"></script>
