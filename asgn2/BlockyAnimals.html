@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Blocky Cat Paradise</title>
+
+  <style>
+    body {
+      background: linear-gradient(to top, #ffe0f0 0%, #fff6f9 100%);
+      font-family: "Comic Sans MS", cursive, sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 20px;
+    }
+
+    header {
+      font-size: 32px;
+      color: #ff69b4;
+      margin-bottom: 20px;
+    }
+
+    canvas {
+      border: 4px dashed #ffaadd;
+      border-radius: 20px;
+      background-color: #fff0f5;
+      margin-bottom: 20px;
+    }
+
+    p, button, input[type="range"] {
+      font-size: 18px;
+      color: #cc6699;
+      margin: 10px;
+    }
+
+    button {
+      background-color: #ffccdd;
+      border: none;
+      padding: 10px 20px;
+      margin: 5px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #ff99bb;
+    }
+
+    #popupText {
+      position: absolute;
+      top: 20%;
+      width: 100%;
+      text-align: center;
+      font-size: 48px;
+      color: #ff99cc;
+      font-family: "Comic Sans MS", cursive, sans-serif;
+      display: none;
+      pointer-events: none;
+    }
+
+    #noteToGrader {
+      background: #ffe4f0;
+      border: 2px dashed #ffaadd;
+      padding: 15px;
+      border-radius: 10px;
+      margin: 20px auto;
+      width: 80%;
+      color: #cc6699;
+      font-size: 18px;
+      text-align: left;
+      font-family: "Comic Sans MS", cursive, sans-serif;
+    }
+
+    #numdot {
+      margin-top: 10px;
+      font-size: 20px;
+      color: #ff7fa8;
+    }
+  </style>
+</head>
+
+<body onload="main()">
+  <header>Blocky Cat Paradise</header>
+
+  <canvas id="webgl" width="400" height="400">
+    Please use a browser that supports "canvas"
+  </canvas>
+
+  <p id="numdot">FPS/Render Time: XXX</p>
+
+  <div>
+    <button id="aniOn">Start Animation</button>
+    <button id="aniOff">Stop Animation</button>
+  </div>
+
+  <p>Camera Angle <input type="range" min="0" max="360" value="5" id="angleSlide"></p>
+  <p>Tail Wag <input type="range" min="-25" max="25" value="0" id="tailSlide"></p>
+
+  <p>Back Left Upper Leg <input type="range" min="-20" max="20" value="0" id="backLeftUpperLegSlider"></p>
+  <p>Back Left Lower Leg <input type="range" min="-20" max="20" value="0" id="backLeftLowerLegSlider"></p>
+
+  <p>Back Right Upper Leg <input type="range" min="-20" max="20" value="0" id="backRightUpperLegSlider"></p>
+  <p>Back Right Lower Leg <input type="range" min="-20" max="20" value="0" id="backRightLowerLegSlider"></p>
+
+  <p>Front Left Upper Leg <input type="range" min="-20" max="20" value="0" id="frontLeftUpperLegSlider"></p>
+  <p>Front Left Lower Leg <input type="range" min="-20" max="20" value="0" id="frontLeftLowerLegSlider"></p>
+
+  <p>Front Right Upper Leg <input type="range" min="-20" max="20" value="0" id="frontRightUpperLegSlider"></p>
+  <p>Front Right Lower Leg <input type="range" min="-20" max="20" value="0" id="frontRightLowerLegSlider"></p>
+
+  <div id="popupText">Meow!</div>
+
+  <div id="noteToGrader">
+    <h3>Note to Graders:</h3>
+    <ul>
+      <li>When you press shift and click on the cat, it makes the cat freeze and a text popup saying meow.</li>
+      <li>I implemented additional moving background elements including animated clouds, a sun with rays, and flowers that sway.</li>
+      <li>Animation can be turned on and off using the buttons above.</li>
+      <li>Tail wagging, leg joint control, and cloud recycling are all adjustable or automatic.</li>
+      <li>The canvas background is styled, the UI is decorated, and popup text was added.</li>
+      <li>I attempted multiple additional points including non-cube shapes (circles for sun, clouds, flowers) and extra animation sequences.</li>
+    </ul>
+  </div>
+
+  <!-- Scripts -->
+  <script src="./lib/webgl-utils.js"></script>
+  <script src="./lib/webgl-debug.js"></script>
+  <script src="./lib/cuon-utils.js"></script>
+  <script src="lib/cuon-matrix-cse160.js"></script>
+  <script src="Triangle.js"></script>
+  <script src="Circle.js"></script>
+  <script src="Point.js"></script>
+  <script src="Cube.js"></script>
+  <script src="BlockyAnimals.js"></script>
+
+</body>
+</html>
