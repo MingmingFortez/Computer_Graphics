@@ -1,49 +1,40 @@
 <!DOCTYPE html>
+
 <html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <title>Blocky Cat Paradise</title>
-</head>
+    <head>
+        <meta charset="utf-8" />
+        <title>Jasmine's world!</title>
+    </head>
 
-<body onload="main()">
-  <header>Blocky Cat Paradise</header>
+    <body onload="main()">
+        <canvas id="webgl" width="700" height="700">
+        Please use a browser that supports "canvas"
+        </canvas>
+        <p>
+        <!-- Camera      
+        <input type="range" min="-180" max="180"  value="0" class="slider" id="angleSlide"/> -->
+        <p> WELCOME TO MY VIRTUAL WORLD!! </p>
+        
+        
+       
 
-  <canvas id="webgl" width="400" height="400">
-    Please use a browser that supports "canvas"
-  </canvas>
+        <p>~COMMANDS~</p>
+        <p>W - Forward
+        <p>S - Backwardss
+        <p>D - Move Right
+        <p>A - Move Left
+        <p>Z - Move Down
+        <p>X - Move Up
+        <p>Q - Look Left
+        <p>E - Look Right
 
-  <p id="numdot">FPS/Render Time: XXX</p>
-
-  <div>
-    <button id="aniOn">Start Animation</button>
-    <button id="aniOff">Stop Animation</button>
-  </div>
-
-  <p>Camera Angle <input type="range" min="0" max="360" value="5" id="angleSlide"></p>
-  <p>Tail Wag <input type="range" min="-25" max="25" value="0" id="tailSlide"></p>
-
-  <p>Back Left Upper Leg <input type="range" min="-20" max="20" value="0" id="backLeftUpperLegSlider"></p>
-  <p>Back Left Lower Leg <input type="range" min="-20" max="20" value="0" id="backLeftLowerLegSlider"></p>
-
-  <p>Back Right Upper Leg <input type="range" min="-20" max="20" value="0" id="backRightUpperLegSlider"></p>
-  <p>Back Right Lower Leg <input type="range" min="-20" max="20" value="0" id="backRightLowerLegSlider"></p>
-
-  <p>Front Left Upper Leg <input type="range" min="-20" max="20" value="0" id="frontLeftUpperLegSlider"></p>
-  <p>Front Left Lower Leg <input type="range" min="-20" max="20" value="0" id="frontLeftLowerLegSlider"></p>
-
-  <p>Front Right Upper Leg <input type="range" min="-20" max="20" value="0" id="frontRightUpperLegSlider"></p>
-  <p>Front Right Lower Leg <input type="range" min="-20" max="20" value="0" id="frontRightLowerLegSlider"></p>
-
-  <!-- Scripts -->
-  <script src="./lib/webgl-utils.js"></script>
-  <script src="./lib/webgl-debug.js"></script>
-  <script src="./lib/cuon-utils.js"></script>
-  <script src="lib/cuon-matrix-cse160.js"></script>
-  <script src="Triangle.js"></script>
-  <script src="Circle.js"></script>
-  <script src="Point.js"></script>
-  <script src="Cube.js"></script>
-  <script src="world.js"></script>
-
-</body>
+        <script src="lib/webgl-utils.js"></script>
+        <script src="lib/webgl-debug.js"></script>
+        <script src="lib/cuon-utils.js"></script>
+        <script src="lib/cuon-matrix-cse160.js"></script>
+        <script src="Triangle.js"></script>
+        <script src="Cube.js"></script>
+        <script src="Camera.js"></script>
+        <script src="world.js"></script>
+    </body>
 </html>

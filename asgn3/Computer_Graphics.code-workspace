@@ -1,0 +1,15 @@
+{
+	"folders": [
+		{
+			"name": "Computer_Graphics",
+			"path": ".."
+		},
+		{
+			"name": "asg3",
+			"path": "../../../Downloads/asg3"
+		}
+	],
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "Computer_Graphics"
+	}
+}
