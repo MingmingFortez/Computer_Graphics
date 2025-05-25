@@ -58,18 +58,11 @@ class Camera {
     
     forward1() {
         console.log("Forward movement triggered");
-        // Normalize the forward vector first
         this.forward.normalize();
-        
-        // Move in the direction of the forward vector
         this.eye.elements[0] += this.forward.elements[0] * this.speed;
         this.eye.elements[1] += this.forward.elements[1] * this.speed;
         this.eye.elements[2] += this.forward.elements[2] * this.speed;
-        
-        // The 'at' point should move with the eye to maintain view direction
-        this.at.elements[0] += this.forward.elements[0] * this.speed;
-        this.at.elements[1] += this.forward.elements[1] * this.speed;
-        this.at.elements[2] += this.forward.elements[2] * this.speed;
+        this.updateLookAt();
         
         if (this.debug) console.log("Moving forward", this.eye.elements);
     }

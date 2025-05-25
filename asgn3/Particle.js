@@ -27,66 +27,42 @@ class Particle {
     }
 }
 
-// Initialize particles
+
 function initParticles() {
-    // Create fire particles at specific locations
-    
-    for (let i = 0; i < 50; i++) {
-        g_particles.push(new Particle(
-            5, 0.5, 5, 0  // Fire at position (5, 0.5, 5)
-        ));
+    // Create initial particles
+    for (let i = 0; i < 100; i++) {
+        g_particles.push({
+            x: Math.random() * 10 - 5,
+            y: Math.random() * 2,
+            z: Math.random() * 10 - 5,
+            size: Math.random() * 0.2 + 0.1,
+            life: Math.random() * 100
+        });
     }
 }
 
-// Update particles
 function updateParticles() {
-    // Update existing particles
-    for (let i = 0; i < g_particles.length; i++) {
-        g_particles[i].update();
-    }
-    
-    // Remove dead particles
-    g_particles = g_particles.filter(p => p.life > 0);
-    
-    // Add new particles occasionally
-    if (Math.random() < 0.1) {
-        g_particles.push(new Particle(
-            5, 0.5, 5, 0  // Fire at position (5, 0.5, 5)
-        ));
-        g_particles.push(new Particle(
-            -5, 1.0, -5, 1  // Smoke at position (-5, 1.0, -5)
-        ));
-    }
+    g_particles.forEach(p => {
+        p.y += 0.01;
+        p.life--;
+        if (p.life <= 0) {
+            p.y = 0;
+            p.life = 100;
+        }
+    });
 }
 
-// Draw particles
 function drawParticles() {
-    // Switch to point rendering
     if (!g_visualSettings.particlesEnabled) return;
+    
     gl.disable(gl.DEPTH_TEST);
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
     
-    // Create buffer for all particles
-    const positions = [];
-    const colors = [];
-    const sizes = [];
-    
-    g_particles.forEach(p => {
-        positions.push(p.x, p.y, p.z);
-        if (p.type === 0) { // Fire
-            colors.push(1.0, 0.3 + p.life * 0.5, 0.0, p.life);
-        } else { // Smoke
-            colors.push(0.5, 0.5, 0.5, p.life * 0.5);
-        }
-        sizes.push(p.size * 100.0); // Scale for point size
-    });
-    
-    if (positions.length === 0) return;
-    
-    // Create and bind buffers (similar to how you handle other geometry)
-    // ... implement buffer creation and drawing here ...
+    // Actual particle rendering would go here
+    // You'd need to implement point sprites or small quads
     
     gl.enable(gl.DEPTH_TEST);
     gl.disable(gl.BLEND);
 }
+
