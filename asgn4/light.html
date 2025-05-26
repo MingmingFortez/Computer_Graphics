@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <title>Light Homework</title>
+  <style>
+    /* RESET & BASE */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      background: #f4f4f9;
+      color: #333;
+      padding: 20px;
+      max-width: 960px;
+      margin: auto;
+    }
+    h1, h2, h3, h4 { margin-bottom: 0.5em; }
+
+    /* CANVAS */
+    #canvas-container {
+      text-align: center;
+      margin-bottom: 2em;
+    }
+    canvas {
+      border: 2px solid #555;
+      border-radius: 4px;
+      max-width: 100%;
+    }
+
+    /* CONTROLS LAYOUT */
+    .controls {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2em;
+    }
+    .control, .toggle-group, .spotlight-group {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      padding: 1em;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .control label, .spotlight-group label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 0.3em;
+    }
+    .control input[type="range"] {
+      width: 100%;
+    }
+
+    /* BUTTONS */
+    .toggle-group, .spotlight-group .toggle {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+      flex-wrap: wrap;
+    }
+    button {
+      padding: 0.5em 1em;
+      border: 2px solid #777;
+      background: #eee;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    button.active {
+      background: #4CAF50;
+      border-color: #3a8e3a;
+      color: #fff;
+    }
+    button:hover { background: #ddd; }
+
+    /* SPOTLIGHT */
+    .spotlight-group h3,
+    .spotlight-group h4 { margin: 0.5em 0; }
+
+    /* IMPLEMENTATION NOTES */
+    #implementation-notes {
+      background: #fff;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      padding: 1em;
+      line-height: 1.4;
+    }
+    #implementation-notes ul { margin-left: 1.2em; }
+    #implementation-notes li + li { margin-top: 0.5em; }
+  </style>
+</head>
+<body onload="main()">
+
+  <h1>Light &amp; Scene Controls</h1>
+
+  <div id="canvas-container">
+    <canvas id="asg4" width="400" height="400">
+      Your browser does not support canvas.
+    </canvas>
+  </div>
+
+  <div class="controls">
+    <!-- Basic Sliders -->
+    <div class="control">
+      <h3>Basic Controls</h3>
+      <label for="camera">Camera Angle</label>
+      <input type="range" id="camera" min="0" max="360" value="0">
+
+      <label for="lightx">Light X (&minus;3 to 3)</label>
+      <input type="range" id="lightx" min="-300" max="300" value="0">
+
+      <label for="lighty">Light Y (0 to 3)</label>
+      <input type="range" id="lighty" min="0" max="300" value="150">
+
+      <label for="lightz">Light Z (&minus;3 to 3)</label>
+      <input type="range" id="lightz" min="-300" max="300" value="0">
+    </div>
+
+    <!-- Toggles -->
+    <div class="toggle-group">
+      <h3>Toggles</h3>
+      <button id="animate_on">Animation ON</button>
+      <button id="animate_off">Animation OFF</button>
+      <button id="normal_on">Normals ON</button>
+      <button id="normal_off">Normals OFF</button>
+      <button id="light_on" class="active">Lighting ON</button>
+      <button id="light_off">Lighting OFF</button>
+      <button id="light_animate_on">Light Anim ON</button>
+      <button id="light_animate_off">Light Anim OFF</button>
+    </div>
+
+    <!-- Spotlight -->
+    <div class="spotlight-group">
+      <h3>Spotlight</h3>
+      <div class="toggle">
+        <button id="spotLightToggle" class="active">Spotlight: ON</button>
+      </div>
+      <h4>Position</h4>
+      <label>X <input type="range" id="spotLightPosX" min="-5" max="5" step="0.1" value="2"></label>
+      <label>Y <input type="range" id="spotLightPosY" min="-5" max="5" step="0.1" value="2"></label>
+      <label>Z <input type="range" id="spotLightPosZ" min="-5" max="5" step="0.1" value="2"></label>
+      <h4>Direction</h4>
+      <label>X <input type="range" id="spotLightDirX" min="-1" max="1" step="0.1" value="-1"></label>
+      <label>Y <input type="range" id="spotLightDirY" min="-1" max="1" step="0.1" value="-1"></label>
+      <label>Z <input type="range" id="spotLightDirZ" min="-1" max="1" step="0.1" value="-1"></label>
+    </div>
+  </div>
+
+  <section id="implementation-notes">
+    <h3>Implementation Notes</h3>
+    <ul>
+      <li><strong>Camera</strong>: slider, WASD/Arrows, Q/E to pan, mouse‐drag.</li>
+      <li><strong>Lighting</strong>: point‐light XYZ sliders, on/off, anim toggle.</li>
+      <li><strong>Normals</strong>: visualize per‐vertex normals.</li>
+      <li><strong>Animation</strong>: sheep/snake motion &amp; light motion toggles.</li>
+      <li><strong>Procedural Models</strong>: snake &amp; sheep built from cubes.</li>
+      <li><strong>Textures</strong>: rocks, sky, grass; NPOT handling &amp; mipmaps.</li>
+      <li><strong>Spotlight</strong>: position &amp; direction sliders, inner/outer cone fall-off.</li>
+    </ul>
+  </section>
+
+  <!-- JS Libraries -->
+  <script src="lib/webgl-utils.js"></script>
+  <script src="lib/webgl-debug.js"></script>
+  <script src="lib/cuon-utils.js"></script>
+  <script src="lib/cuon-matrix-cse160.js"></script>
+  <!-- App Code -->
+  <script src="Triangle.js"></script>
+  <script src="Point.js"></script>
+  <script src="Circle.js"></script>
+  <script src="Cube.js"></script>
+  <script src="Sphere.js"></script>
+  <script src="light.js"></script>
+  <script src="drawAllShapes.js"></script>
+  <script src="Camera.js"></script>
+</body>
+</html>
