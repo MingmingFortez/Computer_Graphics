@@ -2,6 +2,9 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+import { addExtraObjects, floatingMeshes } from './objects.js';
+
+
 
 // Setup renderer
 const canvas = document.querySelector('#c');
@@ -173,8 +176,17 @@ function render(currentTime) {
   cube2.rotation.x = currentTime * 0.7;
   cube2.rotation.y = currentTime * 0.7;
 
+  // Animate floating meshes
+  floatingMeshes.forEach((mesh, i) => {
+    mesh.position.y += Math.sin(currentTime + i) * 0.005;
+    mesh.rotation.y += 0.005;
+  });
+
   controls.update();
   renderer.render(scene, camera);
   requestAnimationFrame(render);
 }
+
+addExtraObjects(scene);
+
 requestAnimationFrame(render);
