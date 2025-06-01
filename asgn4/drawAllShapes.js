@@ -182,8 +182,6 @@ function drawAllShapes() {
    sky.matrix.scale(-10,-10,-10).translate(-.5,-.5,-.5);
    sky.render();
 
-   // Draw floor - FIXED VERSION
-   // In drawAllShapes(), modify the floor section:
 // In drawAllShapes(), modify the floor section:
 const floor = new Cube();
 floor.color = [0.4, 0.8, 0.4, 1]; // Fallback color if texture fails
