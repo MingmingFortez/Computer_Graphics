@@ -1,10 +1,7 @@
 import * as THREE from 'three';
 
 export const floatingMeshes = [];
-export const activeLasers = [];
-export const explosionParticles = [];
-export let score = 0;
-export const hitShips = new Set();
+
 
 export function addExtraObjects(scene) {
   const shipCount = 20;
@@ -108,78 +105,4 @@ export function addStars(scene, count = 200) {
   }
 }
 
-export function createLaser(sourceObject) {
-  const geometry = new THREE.CylinderGeometry(0.03, 0.03, 2, 8);
-  const material = new THREE.MeshBasicMaterial({
-    color: sourceObject.isCamera ? 0x00ff00 : 0xff0000,
-    transparent: true,
-    opacity: 0.9
-  });
-  const laser = new THREE.Mesh(geometry, material);
 
-  laser.rotation.x = Math.PI / 2;
-  laser.position.copy(sourceObject.position);
-  laser.position.z -= 1;
-
-  laser.userData = {
-    velocity: new THREE.Vector3(0, 0, -0.5),
-    isPlayerLaser: sourceObject.isCamera
-  };
-
-  activeLasers.push(laser);
-  return laser;
-}
-
-export function createExplosion(position, scene) {
-  const particleCount = 100;
-  const particles = new THREE.Group();
-  
-  for (let i = 0; i < particleCount; i++) {
-    const size = Math.random() * 0.2 + 0.1;
-    const geometry = new THREE.SphereGeometry(size, 8, 8);
-    const material = new THREE.MeshBasicMaterial({
-      color: new THREE.Color(
-        Math.random() * 0.5 + 0.5,
-        Math.random() * 0.3,
-        0
-      ),
-      transparent: true,
-      opacity: 0.8
-    });
-    
-    const particle = new THREE.Mesh(geometry, material);
-    particle.position.copy(position);
-    particle.userData = {
-      velocity: new THREE.Vector3(
-        (Math.random() - 0.5) * 2,
-        (Math.random() - 0.5) * 2,
-        (Math.random() - 0.5) * 2
-      ).multiplyScalar(0.5),
-      lifetime: 0
-    };
-    
-    particles.add(particle);
-    explosionParticles.push(particle);
-  }
-  
-  scene.add(particles);
-  return particles;
-}
-
-export function updateParticles(deltaTime, scene) {
-  for (let i = explosionParticles.length - 1; i >= 0; i--) {
-    const particle = explosionParticles[i];
-    particle.userData.lifetime += deltaTime;
-    
-    if (particle.userData.lifetime > 2) {
-      scene.remove(particle);
-      explosionParticles.splice(i, 1);
-      continue;
-    }
-    
-    particle.position.add(
-      particle.userData.velocity.clone().multiplyScalar(deltaTime * 10)
-    );
-    particle.material.opacity = 1 - (particle.userData.lifetime / 2);
-  }
-}

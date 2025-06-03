@@ -2,7 +2,8 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
-import { addExtraObjects, floatingMeshes, activeLasers, createLaser, addStars } from './objects.js';
+import { addExtraObjects, floatingMeshes, addStars} from './objects.js';
+
 
 const canvas = document.querySelector('#c');
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
@@ -102,6 +103,42 @@ gltfLoader.load('assets/models/among_us_lobby_3d.glb', (gltf) => {
 }, undefined, (err) => {
   console.error('GLB model failed to load', err);
 });
+let blackHole;
+
+
+const holeGeometry = new THREE.SphereGeometry(1.5, 32, 32);
+const holeMaterial = new THREE.MeshStandardMaterial({
+  color: 0x000000,
+  roughness: 1,
+  metalness: 1,
+  emissive: 0x111111,
+  emissiveIntensity: 1
+});
+blackHole = new THREE.Mesh(holeGeometry, holeMaterial);
+blackHole.position.set(0, 2, -20);
+blackHole.scale.set(4, 4, 4); // Bigger size
+const blackMaterial = new THREE.MeshBasicMaterial({
+    color: 0x000000
+  });
+  
+  const glowMaterial = new THREE.MeshBasicMaterial({
+    color: 0x5500ff,
+    transparent: true,
+    opacity: 0.2,
+    side: THREE.BackSide
+  });
+  
+  const blackSphere = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 32), blackMaterial);
+  const glowSphere = new THREE.Mesh(new THREE.SphereGeometry(1.2, 32, 32), glowMaterial);
+  
+  blackHole.add(blackSphere);
+  blackHole.add(glowSphere);
+  scene.add(blackHole);
+  
+
+
+
+
 
 // Controls
 const controls = new OrbitControls(camera, renderer.domElement);
@@ -137,40 +174,62 @@ function updateCameraMovement(delta) {
   controls.enabled = !Object.values(keysPressed).some(Boolean);
 }
 
-// Laser shooting
-function updateLasers() {
-  activeLasers.forEach((laser, i) => {
-    laser.position.add(laser.userData.velocity);
-    if (laser.position.length() > 100) {
-      scene.remove(laser);
-      activeLasers.splice(i, 1);
-    }
-  });
-}
-window.addEventListener('click', () => {
-  const laser = createLaser(camera);
-  scene.add(laser);
-});
+
+  
+
+
 
 // Render loop
 let previousTime = 0;
+let absorbedCount = 0;
+let blackHoleIsPulsing = false;
+const gravityRadius = 3;
+
 function render(currentTime) {
   currentTime *= 0.001;
   const deltaTime = currentTime - previousTime;
   previousTime = currentTime;
 
   updateCameraMovement(deltaTime);
-  updateLasers();
 
+  // Animate cubes
   cube1.rotation.x = currentTime;
   cube1.rotation.y = currentTime;
   cube2.rotation.x = currentTime * 0.7;
   cube2.rotation.y = currentTime * 0.7;
 
-  floatingMeshes.forEach((mesh, i) => {
+  // Animate floating ships
+  for (let i = floatingMeshes.length - 1; i >= 0; i--) {
+    const mesh = floatingMeshes[i];
     mesh.position.y += Math.sin(currentTime + i) * 0.005;
     mesh.rotation.y += 0.005;
-  });
+
+    // Pull toward black hole
+    const distance = mesh.position.distanceTo(blackHole.position);
+    if (distance < gravityRadius && !mesh.userData.absorbed) {
+      mesh.userData.absorbed = true;
+      absorbedCount++;
+
+      // Remove ship from scene
+      scene.remove(mesh);
+      floatingMeshes.splice(i, 1);
+
+      // Pulse black hole every 3 absorptions
+      if (absorbedCount % 3 === 0 && !blackHoleIsPulsing) {
+        blackHoleIsPulsing = true;
+        const originalScale = blackHole.scale.clone();
+        blackHole.scale.setScalar(3); // Bigger pulse
+        setTimeout(() => {
+          blackHole.scale.copy(originalScale);
+          blackHoleIsPulsing = false;
+        }, 200);
+      }
+    } else if (!mesh.userData.absorbed) {
+      // Lerp ship toward black hole
+      const direction = blackHole.position.clone().sub(mesh.position).normalize();
+      mesh.position.lerp(blackHole.position, 0.0015);
+    }
+  }
 
   controls.update();
   renderer.render(scene, camera);
