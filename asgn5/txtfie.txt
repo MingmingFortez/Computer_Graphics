@@ -1,0 +1,105 @@
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+
+// Setup renderer
+const canvas = document.querySelector('#c');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(window.devicePixelRatio);
+
+// Setup camera
+const fov = 75;
+const aspect = window.innerWidth / window.innerHeight;
+const near = 0.1;
+const far = 100;
+const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
+camera.position.set(0, 2, 5);
+
+// Setup scene
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x222222);
+
+// Add light
+const light = new THREE.DirectionalLight(0xffffff, 2);
+light.position.set(-1, 2, 4);
+scene.add(light);
+
+// Texture loader
+const loader = new THREE.TextureLoader();
+
+// Cube with one texture
+const singleTexture = loader.load('assets/rocks.jpg');
+singleTexture.colorSpace = THREE.SRGBColorSpace;
+singleTexture.wrapS = THREE.RepeatWrapping;
+singleTexture.wrapT = THREE.RepeatWrapping;
+singleTexture.repeat.set(2, 2);
+
+const singleMaterial = new THREE.MeshBasicMaterial({ map: singleTexture });
+const boxGeometry = new THREE.BoxGeometry(1, 1, 1);
+const cube1 = new THREE.Mesh(boxGeometry, singleMaterial);
+cube1.position.x = -2;
+scene.add(cube1);
+
+// Cube with 6 textures
+function loadFaceTexture(name) {
+  const tex = loader.load(`assets/${name}`);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  return new THREE.MeshBasicMaterial({ map: tex });
+}
+
+const multiMaterials = [
+  loadFaceTexture('coral.jpeg'),
+  loadFaceTexture('water.jpeg'),
+  loadFaceTexture('merm.jpeg'),
+  loadFaceTexture('floral.jpeg'),
+  loadFaceTexture('flower.jpeg'),
+  loadFaceTexture('fire.jpeg'),
+];
+
+const cube2 = new THREE.Mesh(boxGeometry, multiMaterials);
+cube2.position.x = 2;
+scene.add(cube2);
+
+// Load GLB model
+const gltfLoader = new GLTFLoader();
+gltfLoader.load('assets/models/among_us_lobby_3d.glb', (gltf) => {
+  const model = gltf.scene;
+  model.position.set(0, -1, 0);
+  model.scale.set(0.5, 0.5, 0.5);
+  scene.add(model);
+}, undefined, (error) => {
+  console.error('Error loading GLB model:', error);
+});
+
+// Orbit controls
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.dampingFactor = 0.05;
+controls.target.set(0, 0, 0);
+controls.update();
+
+// Handle resizing
+window.addEventListener('resize', () => {
+  const width = window.innerWidth;
+  const height = window.innerHeight;
+  camera.aspect = width / height;
+  camera.updateProjectionMatrix();
+  renderer.setSize(width, height);
+});
+
+// Animate
+function render(time) {
+  time *= 0.001;
+
+  cube1.rotation.x = time;
+  cube1.rotation.y = time;
+
+  cube2.rotation.x = time * 0.7;
+  cube2.rotation.y = time * 0.7;
+
+  controls.update();
+  renderer.render(scene, camera);
+  requestAnimationFrame(render);
+}
+requestAnimationFrame(render);
